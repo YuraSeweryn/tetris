@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class Group : MonoBehaviour {
+public class Group : MonoBehaviour
+{
 
     // time of the last fall, used to auto fall after 
     // time parametrized by `level`
@@ -13,23 +14,27 @@ public class Group : MonoBehaviour {
     private float lastKeyDown;
     private float timeKeyPressed;
 
-    public void AlignCenter() {
+    public void AlignCenter()
+    {
         transform.position += transform.position - Utils.Center(gameObject);
     }
 
-
-    bool isValidGridPos() {
-        foreach (Transform child in transform) {
+    bool isValidGridPos()
+    {
+        foreach (Transform child in transform)
+        {
             Vector2 v = Grid.roundVector2(child.position);
 
             // not inside Border?
-            if(!Grid.insideBorder(v)) {
+            if (!Grid.insideBorder(v))
+            {
                 return false;
             }
 
             // Block in grid cell (and not par of same group)?
             if (Grid.grid[(int)(v.x), (int)(v.y)] != null &&
-                Grid.grid[(int)(v.x), (int)(v.y)].parent != transform) {
+                Grid.grid[(int)(v.x), (int)(v.y)].parent != transform)
+            {
                 return false;
             }
         }
@@ -38,34 +43,42 @@ public class Group : MonoBehaviour {
     }
 
     // update the grid
-    void updateGrid() {
+    void updateGrid()
+    {
         // Remove old children from grid
-        for (int y = 0; y < Grid.h; ++y) {
-            for (int x = 0; x < Grid.w; ++x) {
-                if (Grid.grid[x,y] != null &&
-                    Grid.grid[x,y].parent == transform) {
-                    Grid.grid[x,y] = null;
+        for (int y = 0; y < Grid.h; ++y)
+        {
+            for (int x = 0; x < Grid.w; ++x)
+            {
+                if (Grid.grid[x, y] != null &&
+                    Grid.grid[x, y].parent == transform)
+                {
+                    Grid.grid[x, y] = null;
                 }
-            } 
+            }
         }
 
         insertOnGrid();
     }
 
-    void insertOnGrid() {
+    void insertOnGrid()
+    {
         // add new children to grid
-        foreach (Transform child in transform) {
+        foreach (Transform child in transform)
+        {
             Vector2 v = Grid.roundVector2(child.position);
-            Grid.grid[(int)v.x,(int)v.y] = child;
+            Grid.grid[(int)v.x, (int)v.y] = child;
         }
     }
 
-    void gameOver() {
+    void gameOver()
+    {
         Debug.Log("GAME OVER!");
-        while (!isValidGridPos()) {
+        while (!isValidGridPos())
+        {
             //Debug.LogFormat("Updating last group...: {0}", transform.position);
-            transform.position  += new Vector3(0, 1, 0);
-        } 
+            transform.position += new Vector3(0, 1, 0);
+        }
         updateGrid(); // to not overleap invalid groups
         enabled = false; // disable script when dies
         UIController.gameOver(); // active Game Over panel
@@ -74,49 +87,59 @@ public class Group : MonoBehaviour {
     }
 
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
         lastFall = Time.time;
         lastKeyDown = Time.time;
         timeKeyPressed = Time.time;
-        if (isValidGridPos()) {
+        if (isValidGridPos())
+        {
             insertOnGrid();
-        } else { 
+        }
+        else
+        {
             Debug.Log("KILLED ON START");
             gameOver();
         }
 
     }
 
-    void tryChangePos(Vector3 v) {
+    void tryChangePos(Vector3 v)
+    {
         // modify position 
         // FIXME: maybe this is idiot? I can create a copy before and only assign to the transform if is valid
         transform.position += v;
 
         // See if valid
-        if (isValidGridPos()) {
+        if (isValidGridPos())
+        {
             updateGrid();
-        } else {
+        }
+        else
+        {
             transform.position -= v;
         }
     }
 
-    void fallGroup() {
+    void fallGroup()
+    {
         // modify
         transform.position += new Vector3(0, -1, 0);
 
-        if (isValidGridPos()){
+        if (isValidGridPos())
+        {
             // It's valid. Update grid... again
             updateGrid();
-        } else {
+        }
+        else
+        {
             // it's not valid. revert
             transform.position += new Vector3(0, 1, 0);
 
             // Clear filled horizontal lines
             Grid.deleteFullRows();
 
-
             FindObjectOfType<Spawner>().spawnNext();
-
 
             // Disable script
             enabled = false;
@@ -127,45 +150,63 @@ public class Group : MonoBehaviour {
     }
 
     // getKey if is pressed now on longer pressed by 0.5 seconds | if that true apply the key each 0.05f while is pressed
-    bool getKey(KeyCode key) {
+    bool getKey(KeyCode key)
+    {
         bool keyDown = Input.GetKeyDown(key);
         bool pressed = Input.GetKey(key) && Time.time - lastKeyDown > 0.5f && Time.time - timeKeyPressed > 0.05f;
 
-        if (keyDown) {
+        if (keyDown)
+        {
             lastKeyDown = Time.time;
         }
-        if (pressed) {
+        if (pressed)
+        {
             timeKeyPressed = Time.time;
         }
- 
+
         return keyDown || pressed;
     }
 
 
     // Update is called once per frame
-    void Update () {
-        if (UIController.isPaused) {
+    void Update()
+    {
+        if (UIController.isPaused)
+        {
             return; // don't do nothing
         }
-        if (getKey(KeyCode.LeftArrow)) {
+        if (getKey(KeyCode.LeftArrow))
+        {
             tryChangePos(new Vector3(-1, 0, 0));
-        } else if (getKey(KeyCode.RightArrow)) {  // Move right
+        }
+        else if (getKey(KeyCode.RightArrow))
+        {  // Move right
             tryChangePos(new Vector3(1, 0, 0));
-        } else if (getKey(KeyCode.UpArrow) && gameObject.tag != "Cube") { // Rotate
+        }
+        else if (getKey(KeyCode.UpArrow) && gameObject.tag != "Cube")
+        { // Rotate
             transform.Rotate(0, 0, -90);
 
             // see if valid
-            if (isValidGridPos()) {
+            if (isValidGridPos())
+            {
                 // it's valid. Update grid
                 updateGrid();
-            } else {
+            }
+            else
+            {
                 // it's not valid. revert
                 transform.Rotate(0, 0, 90);
             }
-        } else if (getKey(KeyCode.DownArrow) || (Time.time - lastFall) >= (float)1 / Mathf.Sqrt(LevelManager.level)) {
+        }
+        else if (getKey(KeyCode.DownArrow) || (Time.time - lastFall) >= (float)1 / Mathf.Sqrt(LevelManager.level))
+        {
             fallGroup();
-        } else if (Input.GetKeyDown(KeyCode.Space)) {
-            while (enabled) { // fall until the bottom 
+        }
+        else if (Input.GetKeyDown(KeyCode.Space))
+        {
+            while (enabled)
+            { // fall until the bottom 
                 fallGroup();
             }
         }
