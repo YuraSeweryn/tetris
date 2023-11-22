@@ -2,41 +2,48 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NextSpawner : MonoBehaviour {
+public class NextSpawner : MonoBehaviour
+{
 
     private Spawner spawner;
     private GameObject currentGroupObject;
-    private int currentGroupId; 
+    private int currentGroupId;
 
-	// Use this for initialization
-    void Awake () {
+    // Use this for initialization
+    void Awake()
+    {
         spawner = FindObjectOfType<Spawner>();
-	}
+    }
 
 
-    void createStoppedGroup () {
+    void createStoppedGroup()
+    {
         currentGroupObject = spawner.createGroup(transform.position);
         currentGroupId = spawner.nextId;
-        var group = (Group) currentGroupObject.GetComponent(typeof(Group));
+        var group = (Group)currentGroupObject.GetComponent(typeof(Group));
         // put the group align with its center
         group.AlignCenter();
         group.enabled = false;
     }
 
 
-    void deleteCurrentGroup() {
+    void deleteCurrentGroup()
+    {
         Destroy(currentGroupObject);
     }
 
-    void Start() {
+    void Start()
+    {
         createStoppedGroup();
     }
-	
-	// Update is called once per frame
-	void Update () {
-        if (currentGroupId != spawner.nextId) {
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (currentGroupId != spawner.nextId)
+        {
             deleteCurrentGroup();
             createStoppedGroup();
         }
-	}
+    }
 }

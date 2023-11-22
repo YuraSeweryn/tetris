@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class MainMenu : MonoBehaviour {
+public class MainMenu : MonoBehaviour
+{
 
     // this is the button panels
     public GameObject[] buttons;
@@ -13,61 +14,78 @@ public class MainMenu : MonoBehaviour {
     private int buttonSelected;
     private int numberOfButtons;
 
-    void Awake() {
+    void Awake()
+    {
         numberOfButtons = buttons.Length;
         buttonSelected = 0;
         SelectNewGame();
-        if (Highscore.highscore > 0) {
+        if (Highscore.highscore > 0)
+        {
             highscoreText.text = Highscore.Get();
             highScorePanel.SetActive(true);
         }
     }
 
-	public void NewGame() {
-		SceneManager.LoadScene(1);
-	}
-
-    public void Exit() {
-        Application.Quit ();
+    public void NewGame()
+    {
+        SceneManager.LoadScene(1);
     }
 
-    void openSelected() {
-        if (buttonSelected == 0) {
+    public void Exit()
+    {
+        Application.Quit();
+    }
+
+    void openSelected()
+    {
+        if (buttonSelected == 0)
+        {
             NewGame();
-        } else if (buttonSelected == 1) {
+        }
+        else if (buttonSelected == 1)
+        {
             Exit();
         }
     }
 
-    public void SelectNewGame() {
+    public void SelectNewGame()
+    {
         buttons[0].SetActive(true);
         buttons[1].SetActive(false);
         buttonSelected = 0;
     }
 
-    public void SelectExitGame() {
+    public void SelectExitGame()
+    {
         buttons[1].SetActive(true);
         buttons[0].SetActive(false);
         buttonSelected = 1;
     }
 
-    void changePanel(int direction) {
+    void changePanel(int direction)
+    {
         buttons[buttonSelected].SetActive(false);
-        //Debug.LogFormat("Old selected: {0}", buttonSelected);
-        buttonSelected = Utils.Mod(buttonSelected + direction,  numberOfButtons);
-        //Debug.LogFormat("New selected: {0}", buttonSelected);
+        buttonSelected = Utils.Mod(buttonSelected + direction, numberOfButtons);
         buttons[buttonSelected].SetActive(true);
     }
 
-    public void Update() {
+    public void Update()
+    {
         // arrow browsing menu
-        if (Input.GetKeyDown(KeyCode.UpArrow)) {
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
             changePanel(-1); // up
-        } else if (Input.GetKeyDown(KeyCode.DownArrow)) {
+        }
+        else if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
             changePanel(1); // down
-        } else if (Input.GetKeyDown(KeyCode.Return)) {
+        }
+        else if (Input.GetKeyDown(KeyCode.Return))
+        {
             openSelected(); // open selected button
-        } else if (Input.GetKeyDown(KeyCode.Escape)) {
+        }
+        else if (Input.GetKeyDown(KeyCode.Escape))
+        {
             Application.Quit(); // quit
         }
     }

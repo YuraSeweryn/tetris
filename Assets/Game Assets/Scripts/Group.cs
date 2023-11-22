@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class Group : MonoBehaviour
 {
-
     // time of the last fall, used to auto fall after 
     // time parametrized by `level`
     private float lastFall;
@@ -76,14 +75,12 @@ public class Group : MonoBehaviour
         Debug.Log("GAME OVER!");
         while (!isValidGridPos())
         {
-            //Debug.LogFormat("Updating last group...: {0}", transform.position);
             transform.position += new Vector3(0, 1, 0);
         }
         updateGrid(); // to not overleap invalid groups
         enabled = false; // disable script when dies
         UIController.gameOver(); // active Game Over panel
         Highscore.Set(ScoreManager.score); // set highscore
-        //Music.stopMusic(); // stop Music
     }
 
     // Use this for initialization
@@ -107,7 +104,6 @@ public class Group : MonoBehaviour
     void tryChangePos(Vector3 v)
     {
         // modify position 
-        // FIXME: maybe this is idiot? I can create a copy before and only assign to the transform if is valid
         transform.position += v;
 
         // See if valid
@@ -166,7 +162,6 @@ public class Group : MonoBehaviour
 
         return keyDown || pressed;
     }
-
 
     // Update is called once per frame
     void Update()
