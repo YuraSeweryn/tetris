@@ -17,8 +17,6 @@ public class NextSpawner : MonoBehaviour {
     void createStoppedGroup () {
         currentGroupObject = spawner.createGroup(transform.position);
         currentGroupId = spawner.nextId;
-        // Debug.LogFormat("Object position: {0}", currentGroupObject.transform.position);
-        // Debug.LogFormat("Center position: {0}", getBounds(currentGroupObject).center);
         var group = (Group) currentGroupObject.GetComponent(typeof(Group));
         // put the group align with its center
         group.AlignCenter();
