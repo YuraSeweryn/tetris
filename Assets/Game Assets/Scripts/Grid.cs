@@ -9,12 +9,13 @@ using UnityEngine;
 // is there a block or not.
 public class Grid : MonoBehaviour
 {
-
     // The grid itself
     public static int w = 10;
     public static int h = 20;
     // grid storing the Transform element
     public static Transform[,] grid = new Transform[w, h];
+
+    static UIController instance = FindObjectOfType<UIController>();
 
     // convert a real vector to discret coordinates using Mathf.Round
     public static Vector2 roundVector2(Vector2 v)
@@ -38,6 +39,8 @@ public class Grid : MonoBehaviour
             Destroy(grid[x, y].gameObject);
             grid[x, y] = null;
         }
+
+        instance.PlayDeleteSound();
     }
 
 

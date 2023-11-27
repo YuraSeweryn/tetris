@@ -12,6 +12,7 @@ public class Group : MonoBehaviour
     // last key pressed time, to handle long press behavior
     private float lastKeyDown;
     private float timeKeyPressed;
+    static UIController uiController;
 
     public void AlignCenter()
     {
@@ -77,6 +78,10 @@ public class Group : MonoBehaviour
         {
             transform.position += new Vector3(0, 1, 0);
         }
+
+        UIController instance = FindObjectOfType<UIController>();
+        instance.PlayGameOverSound();
+
         updateGrid(); // to not overleap invalid groups
         enabled = false; // disable script when dies
         UIController.gameOver(); // active Game Over panel
@@ -89,6 +94,7 @@ public class Group : MonoBehaviour
         lastFall = Time.time;
         lastKeyDown = Time.time;
         timeKeyPressed = Time.time;
+        uiController = FindObjectOfType<UIController>();
         if (isValidGridPos())
         {
             insertOnGrid();
@@ -198,12 +204,14 @@ public class Group : MonoBehaviour
         {
             fallGroup();
         }
+
         else if (Input.GetKeyDown(KeyCode.Space))
         {
             while (enabled)
             { // fall until the bottom 
                 fallGroup();
             }
+            uiController.PlayFallSound();
         }
 
     }
