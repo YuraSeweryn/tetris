@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class Utils : MonoBehaviour
 {
-
-    // code borrowed from: 
-    // https://forum.unity3d.com/threads/getting-the-bounds-of-the-group-of-objects.70979/
     public static Bounds getRenderBounds(GameObject obj)
     {
         var bounds = new Bounds(Vector3.zero, Vector3.zero);
@@ -14,7 +11,6 @@ public class Utils : MonoBehaviour
         return render != null ? render.bounds : bounds;
     }
 
-    // this too
     public static Bounds getBounds(GameObject obj)
     {
         Bounds bounds;
